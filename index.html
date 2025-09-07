@@ -1,68 +1,28 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>World Clock</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header class="site-header">
-    <div class="container">
-      <h1>World Clock</h1>
-      <p class="sub">Select a city or your current location to show its current date & time.</p>
-    </div>
-  </header>
-
-  <main class="container">
-    <label for="city-select" class="visually-hidden">Choose a city</label>
-    <select id="city-select" aria-label="Choose a city">
-      <option value="">Select a city…</option>
-      <option value="local">Current Location 🌍</option>
-      <option value="Africa/Johannesburg">Johannesburg 🇿🇦</option>
-      <option value="Europe/London">London 🇬🇧</option>
-      <option value="Europe/Paris">Paris 🇫🇷</option>
-      <option value="Asia/Tokyo">Tokyo 🇯🇵</option>
-      <option value="Australia/Sydney">Sydney 🇦🇺</option>
-      <option value="Pacific/Auckland">Auckland 🇳🇿</option>
-    </select>
-
-    <section id="featured" class="featured">
-      <h2 id="featured-title">Pick a city from the dropdown</h2>
-      <div class="featured-time">
-        <div class="date" id="featured-date">—</div>
-        <div class="time" id="featured-time">—</div>
-      </div>
-    </section>
-
-    <section class="grid" aria-label="Live clocks">
-      <div class="city" data-timezone="Africa/Johannesburg">
-        <h3>Johannesburg, ZA</h3>
-        <div class="date"></div>
-        <div class="time"></div>
-      </div>
-
-      <div class="city" data-timezone="Europe/London">
-        <h3>London, UK</h3>
-        <div class="date"></div>
-        <div class="time"></div>
-      </div>
-
-      <div class="city" data-timezone="Pacific/Auckland">
-        <h3>Auckland, NZ</h3>
-        <div class="date"></div>
-        <div class="time"></div>
-      </div>
-    </section>
-  </main>
+  <h1>World Clock</h1>
+  <select id="citySelector">
+    <option value="">Select a city...</option>
+    <option value="America/Los_Angeles">Los Angeles</option>
+    <option value="Europe/Paris">Paris</option>
+    <option value="Africa/Johannesburg">Johannesburg</option>
+    <option value="Asia/Tokyo">Tokyo</option>
+  </select>
+  <div id="clocksContainer"></div>
 
   <footer class="site-footer">
     This project was coded by Sea Phogojane and is open sourced on
-    <a href="https://github.com/Creativehubcenter/worldclock.git" target="_blank" rel="noopener">GitHub</a> and hosted on <a href="https://html-world.netlify.app/">Netlify</a>
+    <a href="https://github.com/Creativehubcenter/worldclock.git">GitHub</a> and hosted on <a href="https://html-world.netlify.app/">Netlify</a>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="index.js"></script>
 </body>
 </html>
 
