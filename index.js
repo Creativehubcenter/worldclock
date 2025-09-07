@@ -10,53 +10,33 @@ document.addEventListener('DOMContentLoaded', () => {
     "Europe/Paris": "Paris 🇫🇷",
     "Asia/Tokyo": "Tokyo 🇯🇵",
     "Australia/Sydney": "Sydney 🇦🇺",
-    "Pacific/Auckland": "Auckland 🇳🇿"
+    "Pacific/Auckland": "Auckland 🇳🇿",
+    "local": "Your Location 🌍"
   };
 
-  // Format date/time for a timezone, safely
   function formatPartsForZone(timeZone) {
     try {
       const now = new Date();
-
-      const optsDate = {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        timeZone
-      };
-
-      const optsTime = {
-        hour: 'numeric',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true,
-        timeZone
-      };
-
-      const dateStr = new Intl.DateTimeFormat(undefined, optsDate).format(now);
-      const timeStr = new Intl.DateTimeFormat(undefined, optsTime).format(now);
-
-      // Try to extract a short time-zone name (may not be available in all engines)
-      let tzAbbrev = '';
-      try {
-        const parts = new Intl.DateTimeFormat(undefined, { timeZone, timeZoneName: 'short' }).formatToParts(now);
-        const tzPart = parts.find(p => p.type === 'timeZoneName');
-        tzAbbrev = tzPart ? ` (${tzPart.value})` : '';
-      } catch (e) {
-        // not critical — some browsers/older engines won't support formatToParts with timeZoneName
-        tzAbbrev = '';
+      if (timeZone === 'local') {
+        // User’s current location
+        return {
+          dateStr: now.toLocaleDateString(undefined, { weekday: 'long', year:'numeric', month:'long', day:'numeric' }),
+          timeStr: now.toLocaleTimeString(undefined, { hour:'numeric', minute:'2-digit', second:'2-digit', hour12:true }),
+          tzAbbrev: ''
+        };
+      } else {
+        const optsDate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone };
+        const optsTime = { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true, timeZone };
+        const dateStr = new Intl.DateTimeFormat(undefined, optsDate).format(now);
+        const timeStr = new Intl.DateTimeFormat(undefined, optsTime).format(now);
+        return { dateStr, timeStr, tzAbbrev: '' };
       }
-
-      return { dateStr, timeStr, tzAbbrev };
     } catch (err) {
-      // If an invalid time zone was supplied or Intl isn't available, log and return placeholders
       console.error('Error formatting date/time for timezone:', timeZone, err);
-      return { dateStr: '—', timeStr: '—', tzAbbrev: '' };
+      return { dateStr:'—', timeStr:'—', tzAbbrev:'' };
     }
   }
 
-  // When user picks a city
   citySelect.addEventListener('change', (e) => {
     const tz = e.target.value;
     if (!tz) {
@@ -66,34 +46,31 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const { dateStr, timeStr, tzAbbrev } = formatPartsForZone(tz);
+    const { dateStr, timeStr } = formatPartsForZone(tz);
     featuredTitle.textContent = cityNames[tz] || tz;
     featuredDate.textContent = dateStr;
-    featuredTime.textContent = `${timeStr}${tzAbbrev}`;
-
-    // Alert for UX (optional)
-    alert(`It is ${dateStr} ${timeStr}${tzAbbrev} in ${cityNames[tz] || tz}`);
+    featuredTime.textContent = timeStr;
+    // Optional alert
+    alert(`It is ${dateStr} ${timeStr} in ${cityNames[tz] || tz}`);
   });
 
-  // Update the small clocks (grid) and the featured area if a city is selected
   function updateClocks() {
     document.querySelectorAll('.city').forEach(node => {
       const tz = node.getAttribute('data-timezone');
       if (!tz) return;
-      const { dateStr, timeStr, tzAbbrev } = formatPartsForZone(tz);
+      const { dateStr, timeStr } = formatPartsForZone(tz);
       node.querySelector('.date').textContent = dateStr;
-      node.querySelector('.time').textContent = `${timeStr}${tzAbbrev}`;
+      node.querySelector('.time').textContent = timeStr;
     });
 
     const selectedTz = citySelect.value;
     if (selectedTz) {
-      const { dateStr, timeStr, tzAbbrev } = formatPartsForZone(selectedTz);
+      const { dateStr, timeStr } = formatPartsForZone(selectedTz);
       featuredDate.textContent = dateStr;
-      featuredTime.textContent = `${timeStr}${tzAbbrev}`;
+      featuredTime.textContent = timeStr;
     }
   }
 
-  // initial tick + interval
   updateClocks();
   setInterval(updateClocks, 1000);
 });
